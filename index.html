@@ -325,7 +325,7 @@
       </div>
       <div class="field">
         <label>Locali</label>
-        <input type="number" id="hf-locali" placeholder="3">
+        <input type="text" id="hf-locali" placeholder="3">
       </div>
     </div>
     <div class="row2">
@@ -407,7 +407,34 @@ Ideale prima casa o investimento</textarea>
 
 <script>
 (function(){
-  var photos = [null, null]; // object URLs
+  var photos = [null, null]; // object URL (dal file picker) o URL remoto (precompilato)
+
+  /* [10 nov 2026] Precompilazione da query string: il gestionale apre questa
+     pagina con i dati dell'immobile già pronti (indirizzo, prezzo, foto...),
+     niente da ricopiare a mano. Parametri: indirizzo, comune, prezzo, mq,
+     locali, piano, tag, agenzia, agente, contatto, foto1, foto2. */
+  function precompila(){
+    var qs = new URLSearchParams(window.location.search);
+    var map = {
+      indirizzo:'hf-indirizzo', comune:'hf-comune', prezzo:'hf-prezzo',
+      mq:'hf-mq', locali:'hf-locali', piano:'hf-piano', tag:'hf-tag',
+      agenzia:'hf-agenzia', agente:'hf-agente', contatto:'hf-contatto'
+    };
+    var trovato = false;
+    Object.keys(map).forEach(function(k){
+      var v = qs.get(k);
+      if(v){ document.getElementById(map[k]).value = v; trovato = true; }
+    });
+    [0,1].forEach(function(slot){
+      var v = qs.get('foto'+(slot+1));
+      if(v){
+        photos[slot] = v;
+        document.getElementById('hf-ph-thumb-'+slot).src = v;
+        trovato = true;
+      }
+    });
+    return trovato;
+  }
 
   function esc(s){
     return (s||'').toString().replace(/[&<>"']/g, function(c){
@@ -419,7 +446,7 @@ Ideale prima casa o investimento</textarea>
 
   function buildSlide1(d){
     var photo = photos[0]
-      ? '<img class="bgphoto" src="'+photos[0]+'">'
+      ? '<img class="bgphoto" crossorigin="anonymous" src="'+photos[0]+'">'
       : '<div class="bgphoto placeholder"></div>';
     var tag = d.tag ? '<div class="tag">'+esc(d.tag)+'</div>' : '';
     return '<div class="slide slide1">'+photo+
@@ -435,7 +462,7 @@ Ideale prima casa o investimento</textarea>
 
   function buildSlide2(d){
     var photo = photos[1]
-      ? '<img class="bgphoto" src="'+photos[1]+'">'
+      ? '<img class="bgphoto" crossorigin="anonymous" src="'+photos[1]+'">'
       : '<div class="bgphoto placeholder"></div>';
     var stats = '';
     if(d.mq) stats += '<div class="stat"><div class="num">'+esc(d.mq)+' m²</div><div class="lbl">Superficie</div></div>';
@@ -587,7 +614,9 @@ Ideale prima casa o investimento</textarea>
     });
   });
 
+  var precompilato = precompila();
   renderPreview();
+  if(precompilato) document.getElementById('status').textContent = 'Dati precompilati dal gestionale — controlla e scarica.';
 })();
 </script>
 
