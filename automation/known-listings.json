@@ -1,6 +1,6 @@
 {
   "_comment": "Baseline per il controllo automatico giornaliero nuovi/riattivati immobili. Aggiornato dallo scheduled task — non modificare a mano.",
-  "ultimo_controllo": "2026-11-10",
+  "ultimo_controllo": "2026-11-11",
   "immobili": {
     "0001": "venduto",
     "0003": "venduto",
