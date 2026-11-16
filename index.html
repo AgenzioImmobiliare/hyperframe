@@ -529,6 +529,19 @@ Ideale prima casa o investimento</textarea>
 
   document.getElementById('btnAnteprima').addEventListener('click', renderPreview);
 
+  /* [16 nov 2026] Punto d'ingresso pubblico per il Marketing Hub (indexplus.html),
+     che incorpora questa pagina in un iframe della stessa origine: permette di
+     cambiare una foto dal picker del Hub senza ricaricare l'iframe. "photos" è
+     chiusa nella IIFE di questo file, quindi non raggiungibile da fuori senza
+     questo hook esplicito. */
+  window.hfSetPhoto = function(slot, url){
+    if(slot!==0 && slot!==1) return;
+    photos[slot] = url;
+    var t = document.getElementById('hf-ph-thumb-'+slot);
+    if(t) t.src = url;
+    renderPreview();
+  };
+
   [0,1].forEach(function(slot){
     var input = document.querySelector('input[type=file][data-slot="'+slot+'"]');
     input.addEventListener('change', function(e){
