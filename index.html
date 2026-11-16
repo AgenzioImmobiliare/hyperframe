@@ -180,7 +180,7 @@
     font-size:38px;font-weight:600;color:#fff;margin-bottom:20px;
   }
   .slide .price-pill{
-    display:inline-flex;
+    display:inline-block;
     background:linear-gradient(135deg,var(--gold),var(--gold2));
     border-radius:20px;
     padding:18px 34px;
@@ -563,14 +563,19 @@ Ideale prima casa o investimento</textarea>
   }
 
   function cattura(el){
+    /* foreignObjectRendering:true va spesso in bianco con foto caricate da
+       file (blob:) senza dare errore, quindi il fallback nel catch non
+       scattava mai: usiamo solo la modalità di cattura DOM classica.
+       Il .slide eredita transform:scale(0.27778) dal contenitore .scaler
+       (serve solo per l'anteprima a schermo): senza toglierlo nel clone,
+       html2canvas disegna la slide rimpicciolita in un angolo della tela
+       1080×1350, lasciando il resto trasparente (= ZIP "bianco"). */
     return window.html2canvas(el, {
-      foreignObjectRendering: true,
-      useCORS: true,
-      backgroundColor: null,
-      width: 1080,
-      height: 1350
-    }).catch(function(){
-      return window.html2canvas(el, { useCORS:true, backgroundColor:null, width:1080, height:1350 });
+      useCORS:true, backgroundColor:null, width:1080, height:1350,
+      onclone: function(doc, cloned){
+        var scaler = cloned.closest('.scaler');
+        if (scaler) scaler.style.transform = 'none';
+      }
     });
   }
 
