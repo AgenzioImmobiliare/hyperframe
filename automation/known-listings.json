@@ -1,6 +1,6 @@
 {
   "_comment": "Baseline per il controllo automatico giornaliero nuovi/riattivati immobili. Aggiornato dallo scheduled task — non modificare a mano.",
-  "ultimo_controllo": "2026-11-27",
+  "ultimo_controllo": "2026-11-28",
   "_nota_23nov2026": "cerca_immobili con testo vuoto risponde al massimo 30 risultati: tronca silenziosamente l'elenco e non mostrava i ref dal 39 in su. Scoperto e completato oggi (0039-0055) interrogando i ref uno per uno; nessuno di questi è un annuncio nuovo di oggi, erano solo mancanti dal file. Da tenere a mente nei controlli futuri finché il limite dello strumento non si risolve.",
   "immobili": {
     "0001": "venduto",
